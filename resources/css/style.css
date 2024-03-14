@@ -1,3 +1,46 @@
+* {
+    font-family: "Roboto Mono", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family: "Ojuju", sans-serif;
+}
+
+[data-bs-theme="light"] .ragsy-card {
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+}
+
+[data-bs-theme="dark"] .ragsy-card {
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(245, 245, 245, 0.1);
+    padding: 16px;
+}
+
+[data-bs-theme="dark"] .dropzone-area {
+    border: 2px dashed rgba(245, 245, 245, 0.5);
+    padding: 16px;
+    border-radius: 8px;
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 16px;
+    cursor: pointer;
+}
+
 .sidebar {
     min-height: 100vh;
+    width: 200px;
+}
+
+.sidebar .logo {
+    width: 40px;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    column-gap: 16px;
 }

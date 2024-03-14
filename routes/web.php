@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+Route::controller(DocumentController::class)
+->prefix('documents')
+->group(function(){
+    Route::get('/', 'index')->name('documents.index');
+    Route::post('/store', 'store')->name('documents.store');
+    Route::get('/download/{document}', 'download')->name('documents.download');
+    Route::delete('/{document}', 'destroy')->name('documents.destroy');
+    // Route::get('/{document}', 'show')->name('documents.show');
+    // Route::get('/{document}/edit', 'edit')->name('documents.edit');
+    // Route::put('/{document}', 'update')->name('documents.update');
 });
+
