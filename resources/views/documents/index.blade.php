@@ -43,6 +43,9 @@
                                 <td>{{ $document->created_at->diffForHumans() }}</td>
                                 <td>
                                     <div class="d-flex gap-1">
+                                        <a href="{{ route('documents.test', $document) }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
                                         <a href="{{ route('documents.download', $document) }}" class="btn btn-outline-primary btn-sm">
                                             <i class="bi bi-download"></i>
                                         </a>

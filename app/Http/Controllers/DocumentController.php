@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
+use App\Services\DocumentSplitter;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -50,5 +51,13 @@ class DocumentController extends Controller
         $document->delete();
 
         return redirect()->route('documents.index');
+    }
+
+    public function test(Document $document)
+    {
+        $content = $document->getContentFromFile();
+        $splittedDocuments = DocumentSplitter::splitDocument($content, 500, ' ', 30);
+
+        return view('documents.test', compact('splittedDocuments'));
     }
 }

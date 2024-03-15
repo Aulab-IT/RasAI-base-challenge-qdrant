@@ -25,7 +25,7 @@ Route::controller(DocumentController::class)
     Route::post('/store', 'store')->name('documents.store');
     Route::get('/download/{document}', 'download')->name('documents.download');
     Route::delete('/{document}', 'destroy')->name('documents.destroy');
-    // Route::get('/{document}', 'show')->name('documents.show');
+    Route::get('/{document}', 'test')->name('documents.test');
     // Route::get('/{document}/edit', 'edit')->name('documents.edit');
     // Route::put('/{document}', 'update')->name('documents.update');
 });
