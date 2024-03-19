@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
-use App\Services\DocumentSplitter;
+use App\Services\DocumentSplitterService;
+use App\Services\EmbeddingService;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -23,17 +24,29 @@ class DocumentController extends Controller
             'file' => 'required|file'
         ]);
         
-        $document = $request->file('file');
-        $path = $document->store('documents');
+        $file = $request->file('file');
+        $path = $file->store('documents');
 
-        $document = new Document([
+        $document = Document::create([
             'name' => $request->name,
-            'path' => $path,
-            'mime' => $document->getClientMimeType(),
-            'size' => $document->getSize()
+            'path' => $file->store('documents'),
+            'mime' => $file->getClientMimeType(),
+            'size' => $file->getSize()
         ]);
 
-        $document->save();
+        $content = $document->getContentFromFile();
+        $splittedDocuments = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
+        
+        foreach ($splittedDocuments as $splittedDocument) {
+            
+            $embedding = EmbeddingService::createEmbedding($splittedDocument);
+            
+            $kb = $document->knowledgeBases()->create([
+                'content' => $splittedDocument,
+                'embedding' => json_encode($embedding)
+            ]);
+
+        }
 
         return redirect()->route('documents.index');
     }
@@ -56,8 +69,20 @@ class DocumentController extends Controller
     public function test(Document $document)
     {
         $content = $document->getContentFromFile();
-        $splittedDocuments = DocumentSplitter::splitDocument($content, 500, ' ', 30);
+        $splittedDocuments = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
+        
+        foreach ($splittedDocuments as $splittedDocument) {
+            $embedding = EmbeddingService::createEmbedding($splittedDocument);
+            
+            $kb = $document->knowledgeBases()->create([
+                'content' => $splittedDocument,
+                'embedding' => json_encode($embedding)
+            ]);
 
-        return view('documents.test', compact('splittedDocuments'));
+        }
+    
+        return redirect()->route('documents.index');
+
+        // return view('documents.test', compact('splittedDocuments'));
     }
 }

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Document;
 
-final class DocumentSplitter 
+final class DocumentSplitterService 
 {
     public static function splitDocument(string $text, int $maxLength = 1000, string $separator = ' ', int $overlapping = 20): array
     {
@@ -72,7 +72,7 @@ final class DocumentSplitter
     {
         $splittedDocuments = [];
         foreach ($documents as $document) {
-            $splittedDocuments = array_merge($splittedDocuments, DocumentSplitter::splitDocument($document, $maxLength, $separator));
+            $splittedDocuments = array_merge($splittedDocuments, DocumentSplitterService::splitDocument($document, $maxLength, $separator));
         }
 
         return $splittedDocuments;
