@@ -43,18 +43,21 @@
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-body-emphasis">
-            <i class="bi bi-speedometer2"></i>
-            Dashboard
+        <a 
+          href="{{ route('chat.index') }}" 
+          class="nav-link link-body-emphasis {{ (Route::currentRouteName() == 'chat.index') ? 'active' : ''}}"
+        >
+          <i class="bi bi-chat"></i>
+          Chat
         </a>
       </li>
       <li>
         <a 
-            href="{{ route('documents.index') }}" 
-            class="nav-link link-body-emphasis {{ (Route::currentRouteName() == 'documents.index') ? 'active' : ''}}"
+          href="{{ route('documents.index') }}" 
+          class="nav-link link-body-emphasis {{ (Route::currentRouteName() == 'documents.index') ? 'active' : ''}}"
         >
-            <i class="bi bi-file-earmark-break"></i>
-            Documents
+          <i class="bi bi-file-earmark-break"></i>
+          Documents
         </a>
       </li>
     </ul>
