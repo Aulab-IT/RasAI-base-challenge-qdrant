@@ -36,6 +36,10 @@
                 </div>
             </div>
         @endforelse
+
+        <div>
+            <p wire:stream="generateResponse">{{ $openAiResponse }}</p>
+        </div>
     </div>
     <form wire:submit="ask" class="chat-input">
         <div class="w-100">
