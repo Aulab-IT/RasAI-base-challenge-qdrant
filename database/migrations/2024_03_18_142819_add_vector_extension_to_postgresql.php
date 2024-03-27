@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Note per installare questa estensione (pgVector) è necessario avere installato il pacchetto
         DB::statement("CREATE EXTENSION IF NOT EXISTS vector;");
     }
 

@@ -29,20 +29,20 @@ class DocumentController extends Controller
 
         $document = Document::create([
             'name' => $request->name,
-            'path' => $file->store('documents'),
+            'path' => $path,
             'mime' => $file->getClientMimeType(),
             'size' => $file->getSize()
         ]);
 
         $content = $document->getContentFromFile();
-        $splittedDocuments = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
-        
-        foreach ($splittedDocuments as $splittedDocument) {
+        $documentParts = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
+        // TODO : Cambiare nome modello KnowledgeBase in Embedding
+        foreach ($documentParts as $part) {
             
-            $embedding = EmbeddingService::createEmbedding($splittedDocument);
+            $embedding = EmbeddingService::createEmbedding($part);
             
             $kb = $document->knowledgeBases()->create([
-                'content' => $splittedDocument,
+                'content' => $part,
                 'embedding' => json_encode($embedding)
             ]);
 

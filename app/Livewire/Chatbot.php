@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Chat;
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use App\Services\EmbeddingService;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +24,26 @@ class Chatbot extends Component
     public function mount()
     {   
         if($this->chat_id){
+            // TODO estrapolare in funzione privata loadChat
             $this->chat = Chat::find($this->chat_id);
             $this->messages = $this->chat->messages;
         }
     }
+
+    #[On('chatbot:select-chat')]
+    public function selectChat($chat_id)
+    {
+        if(!$chat_id){
+            $this->chat = null;
+            $this->messages = [];
+            $this->chat_id = null;
+            return;
+        }
+        
+        $this->chat_id = $chat_id;
+        $this->chat = Chat::find($chat_id);
+        $this->messages = $this->chat->messages;
+    } 
 
     public function ask()
     {
@@ -138,6 +155,7 @@ class Chatbot extends Component
             'title' => $titleCreation->choices[0]->message->content
         ]);
         $this->chat_id = $this->chat->id;
+        $this->dispatch('chatbot:select-chat', $this->chat_id);
     }
 
     public function render()

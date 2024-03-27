@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
             $table->timestamps();
         });
-
+        // TODO Embedding è il nome del campo di tipo vector
         DB::statement("ALTER TABLE knowledge_bases ADD embedding vector;");
     }
 

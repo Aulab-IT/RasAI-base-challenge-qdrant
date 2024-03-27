@@ -4,7 +4,7 @@ namespace App\Services;
 
 use OpenAI\Laravel\Facades\OpenAI;
 
-
+// TOFO : RINOMINARE EmbeddingService in OpenAiService
 class EmbeddingService {
     public static function createEmbedding($content)
     {
