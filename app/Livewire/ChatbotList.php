@@ -26,9 +26,8 @@ class ChatbotList extends Component
     }
 
     public function newChat(){
-
         $this->chat_id = null;
-        $this->dispatch('chatbot:select-chat');
+        $this->dispatch('chatbot:select-chat' , null);
     }
 
     #[On('chatbot:select-chat')]
