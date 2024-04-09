@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('knowledge_bases', function (Blueprint $table) {
+        Schema::create('embeddings', function (Blueprint $table) {
             $table->id();
             $table->longText('content');
             $table->unsignedBigInteger('document_id');
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
         });
         // TODO Embedding è il nome del campo di tipo vector
-        DB::statement("ALTER TABLE knowledge_bases ADD embedding vector;");
+        DB::statement("ALTER TABLE embeddings ADD embedding vector;");
     }
 
     /**
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('knowledge_bases');
+        Schema::dropIfExists('embeddings');
     }
 };

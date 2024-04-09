@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Embedding;
 use Smalot\PdfParser\Parser;
-use App\Models\KnowledgeBase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -46,7 +46,7 @@ class Document extends Model
         return file_get_contents($this->path);
     }
 
-    public function knowledgeBases(){
-        return $this->hasMany(KnowledgeBase::class);
+    public function embeddings(){
+        return $this->hasMany(Embedding::class);
     }
 }

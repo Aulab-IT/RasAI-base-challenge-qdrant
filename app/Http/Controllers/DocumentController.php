@@ -36,14 +36,14 @@ class DocumentController extends Controller
 
         $content = $document->getContentFromFile();
         $documentParts = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
-        // TODO : Cambiare nome modello KnowledgeBase in Embedding
+
         foreach ($documentParts as $part) {
             
-            $embedding = EmbeddingService::createEmbedding($part);
+            $vector = EmbeddingService::createEmbedding($part);
             
-            $kb = $document->knowledgeBases()->create([
+            $embedding = $document->embeddings()->create([
                 'content' => $part,
-                'embedding' => json_encode($embedding)
+                'embedding' => json_encode($vector)
             ]);
 
         }
@@ -74,7 +74,7 @@ class DocumentController extends Controller
         foreach ($splittedDocuments as $splittedDocument) {
             $embedding = EmbeddingService::createEmbedding($splittedDocument);
             
-            $kb = $document->knowledgeBases()->create([
+            $kb = $document->embeddings()->create([
                 'content' => $splittedDocument,
                 'embedding' => json_encode($embedding)
             ]);

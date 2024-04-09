@@ -122,7 +122,7 @@ class Chatbot extends Component
     public function getContextFromKnowledgeBase($message){
         $vector = json_encode(EmbeddingService::createEmbedding($message));
 
-        $result = DB::table('knowledge_bases')
+        $result = DB::table('embeddings')
                 ->select("content")
                 ->selectSub("embedding <=> '{$vector}'::vector", "distance")
                 ->orderBy('distance', 'asc')
