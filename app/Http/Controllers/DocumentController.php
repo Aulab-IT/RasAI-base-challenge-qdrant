@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Services\DocumentSplitterService;
-use App\Services\EmbeddingService;
+use App\Services\OpenAiService;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -39,7 +39,7 @@ class DocumentController extends Controller
 
         foreach ($documentParts as $part) {
             
-            $vector = EmbeddingService::createEmbedding($part);
+            $vector = OpenAiService::createEmbedding($part);
             
             $embedding = $document->embeddings()->create([
                 'content' => $part,
@@ -72,7 +72,7 @@ class DocumentController extends Controller
         $splittedDocuments = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
         
         foreach ($splittedDocuments as $splittedDocument) {
-            $embedding = EmbeddingService::createEmbedding($splittedDocument);
+            $embedding = OpenAiService::createEmbedding($splittedDocument);
             
             $kb = $document->embeddings()->create([
                 'content' => $splittedDocument,

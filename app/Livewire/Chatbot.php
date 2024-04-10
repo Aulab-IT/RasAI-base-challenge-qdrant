@@ -6,12 +6,15 @@ use App\Models\Chat;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
-use App\Services\EmbeddingService;
+use Livewire\WithFileUploads;
+use App\Services\OpenAiService;
 use Illuminate\Support\Facades\DB;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class Chatbot extends Component
 {
+    use WithFileUploads;
+    
     #[Url(as: 'c')] 
     public $chat_id = null;
 
@@ -20,6 +23,7 @@ class Chatbot extends Component
     public $message = '';
     public $openAiResponse = '';
     public $userPrompt = '';
+    public $audioMessage = '';
 
     public function mount()
     {   
@@ -50,6 +54,14 @@ class Chatbot extends Component
         // $this->validate([
         //     'message' => 'required'
         // ]);
+
+        if($this->audioMessage){
+           $path = $this->audioMessage->store('audio', 'public');
+            // dd($path , storage_path('app/public/' . $path));
+           $response = OpenAiService::speechToText(storage_path('app/public/' . $path));
+
+           $this->message = $response;
+        }
 
         $this->userPrompt = $this->message;
 
@@ -120,7 +132,7 @@ class Chatbot extends Component
     }
 
     public function getContextFromKnowledgeBase($message){
-        $vector = json_encode(EmbeddingService::createEmbedding($message));
+        $vector = json_encode(OpenAiService::createEmbedding($message));
 
         $result = DB::table('embeddings')
                 ->select("content")

@@ -4,8 +4,7 @@ namespace App\Services;
 
 use OpenAI\Laravel\Facades\OpenAI;
 
-// TOFO : RINOMINARE EmbeddingService in OpenAiService
-class EmbeddingService {
+class OpenAiService {
     public static function createEmbedding($content)
     {
         $embedding = OpenAI::embeddings()->create([
@@ -14,5 +13,16 @@ class EmbeddingService {
         ]);
 
         return $embedding->embeddings[0]->embedding;
+    }
+
+    public static function speechToText($audioPath)
+    {
+        $response = OpenAI::audio()->transcribe([
+            'model' => 'whisper-1',
+            'file' => fopen($audioPath , 'r'),
+            'response_format' => 'verbose_json',
+        ]);
+
+        return $response->text;
     }
 }
