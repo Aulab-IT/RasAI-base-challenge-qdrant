@@ -33,6 +33,8 @@ class Chatbot extends Component
     public $audioMessage = '';
     public $audioState = 'idle';
 
+    public $imageMode = false;
+
     public function mount()
     {   
         $this->loadChat($this->chat_id);
@@ -78,6 +80,11 @@ class Chatbot extends Component
         $this->resetAudio();
     }
 
+    public function toggleImageMode()
+    {
+        $this->imageMode = !$this->imageMode;
+    }
+
     private function resetChat()
     {
         $this->chat = null;
@@ -107,7 +114,12 @@ class Chatbot extends Component
 
         $this->currentMessage = '';
 
-        $this->js('$wire.generateOpenAiResponse()');
+        // TODO :: Generare immagine nel caso imageMode sia attivo altrimenti generare risposta
+        if($this->imageMode){
+            $this->js('$wire.generateImage()');
+        }else{
+            $this->js('$wire.generateOpenAiResponse()');
+        }
     }
 
     private function handleAudioMessage()
@@ -170,6 +182,21 @@ class Chatbot extends Component
 
         $this->js('$wire.generateTextToSpeech(' . $message->id . ')');
 
+    }
+
+    public function generateImage()
+    {
+        $prompt = $this->userPrompt;
+
+        $image_url = OpenAiService::createImage($prompt);
+
+        $message = $this->chat->messages()->create([
+            'content' => $image_url,
+            'role' => 'assistant',
+            'is_image_content' => true
+        ]);
+
+        $this->chatMessages = $this->chat->messages;
     }
 
     public function generateTextToSpeech(Message $message)

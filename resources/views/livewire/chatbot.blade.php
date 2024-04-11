@@ -9,7 +9,11 @@
                     <img src="https://via.placeholder.com/40" alt="Avatar">
                 </div>
                 <div class="">
-                    <p>{{ $chatMessage->content }}</p>
+                    @if($chatMessage->is_image_content)
+                        <img width="512" src="{{ $chatMessage->content }}" alt="Image">
+                    @else
+                        <p>{{ $chatMessage->content }}</p>
+                    @endif
                     @if ($chatMessage->audio_path)
                         <audio controls src="{{ Storage::url($chatMessage->audio_path) }}"></audio>
                     @endif
@@ -28,6 +32,13 @@
         </div>
     </div>
     <form wire:submit="ask" class="chat-input align-items-center">
+        <button type="button" wire:click="toggleImageMode" class="btn btn-outline-primary">
+            @if($imageMode)
+                <i class="bi bi-card-text"></i>
+            @else
+                <i class="bi bi-image"></i>
+            @endif
+        </button>
         <div class="flex-grow-1">
             <div id="inputWrapper" class="w-100 @if($audioState != 'idle') d-none @endif ">
                 <input class="messageInput" wire:model.live="currentMessage" type="text">

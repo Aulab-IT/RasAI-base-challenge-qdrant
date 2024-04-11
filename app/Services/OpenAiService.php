@@ -76,4 +76,17 @@ class OpenAiService {
 
         return $path;
     }
+
+    public static function createImage($prompt)
+    {
+        $response = OpenAI::images()->create([
+            'model' => 'dall-e-3',
+            'prompt' => $prompt,
+            'n' => 1,
+            'size' => '1024x1024',
+            'response_format' => 'url',
+        ]);
+
+        return $response->data[0]->url;
+    }
 }
