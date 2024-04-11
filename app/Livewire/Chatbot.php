@@ -8,89 +8,134 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\WithFileUploads;
 use App\Services\OpenAiService;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class Chatbot extends Component
 {
     use WithFileUploads;
+
+    const ROLE_USER = 'user';
+    const ROLE_ASSISTANT = 'assistant';
     
     #[Url(as: 'c')] 
     public $chat_id = null;
 
     public $chat = null;
-    public $messages = [];
-    public $message = '';
+    public $chatMessages = [];
+
+    public $currentMessage = '';
     public $openAiResponse = '';
     public $userPrompt = '';
+
     public $audioMessage = '';
+    public $audioState = 'idle';
 
     public function mount()
     {   
-        if($this->chat_id){
-            // TODO estrapolare in funzione privata loadChat
-            $this->chat = Chat::find($this->chat_id);
-            $this->messages = $this->chat->messages;
-        }
+        $this->loadChat($this->chat_id);
+    }
+
+    public function rules()
+    {
+        return [
+            'currentMessage' => 'required_without:audioMessage'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'currentMessage.required_without' => 'Please enter a message or record an audio message.'
+        ];
     }
 
     #[On('chatbot:select-chat')]
     public function selectChat($chat_id)
     {
+        $this->loadChat($chat_id);
+    } 
+
+    // #[On('startRecording')]
+    // public function startRecording()
+    // {
+    //     $this->dispatch('startRecording')->self();
+    // }
+
+    private function loadChat($chat_id)
+    {
         if(!$chat_id){
-            $this->chat = null;
-            $this->messages = [];
-            $this->chat_id = null;
+            $this->resetChat();
+            $this->resetAudio();
             return;
         }
         
         $this->chat_id = $chat_id;
         $this->chat = Chat::find($chat_id);
-        $this->messages = $this->chat->messages;
-    } 
+        $this->chatMessages = $this->chat->messages;
+        $this->resetAudio();
+    }
+
+    private function resetChat()
+    {
+        $this->chat = null;
+        $this->chatMessages = [];
+        $this->chat_id = null;
+    }
+
+    private function resetAudio()
+    {
+        $this->audioMessage = null;
+        $this->audioState = 'idle';
+    }
 
     public function ask()
     {
-        // $this->validate([
-        //     'message' => 'required'
-        // ]);
+        $this->validate();
 
-        if($this->audioMessage){
-           $path = $this->audioMessage->store('audio', 'public');
-            // dd($path , storage_path('app/public/' . $path));
-           $response = OpenAiService::speechToText(storage_path('app/public/' . $path));
+        $this->handleAudioMessage();
 
-           $this->message = $response;
-        }
-
-        $this->userPrompt = $this->message;
+        $this->userPrompt = $this->currentMessage;
 
         if(!$this->chat){
             $this->createChat();
         }
         
-        $this->chat->messages()->create([
-            'content' => $this->message,
-            'role' => 'user'
-        ]);
+        $this->createMessage(self::ROLE_USER, $this->currentMessage);
 
-        $this->message = '';
-        $this->messages = $this->chat->messages;
+        $this->currentMessage = '';
 
         $this->js('$wire.generateOpenAiResponse()');
     }
 
-    public function generateOpenAiResponse(){
-        $system_prompt = $this->generateSystemPrompt();
+    private function handleAudioMessage()
+    {
+        if($this->audioMessage){
+           $path = $this->audioMessage->store('audio', 'public');
+           $response = OpenAiService::speechToText(storage_path('app/public/' . $path));
 
-        $stream = Openai::chat()->createStreamed([
-            'model' => 'gpt-3.5-turbo',
-            'temperature' => 0.8,
-            'messages' => [
-                ['role' => 'system', 'content' => $system_prompt],
-                ['role' => 'user', 'content' => $this->userPrompt],
-            ],
+           $this->currentMessage = $response;
+           $this->audioMessage = null;
+           $this->audioState = 'idle';
+        }
+    }
+
+    private function createMessage($role, $content)
+    {
+        $this->chat->messages()->create([
+            'content' => $content,
+            'role' => $role
         ]);
+
+        $this->chatMessages = $this->chat->messages;
+    }
+
+    public function generateOpenAiResponse()
+    {
+        $systemPrompt = $this->generateSystemPrompt();
+
+        $stream = OpenAiService::createStreamedChat($systemPrompt, $this->userPrompt);
 
         foreach ($stream as $response) {
             $text = $response->choices[0]->delta->content;
@@ -113,11 +158,12 @@ class Chatbot extends Component
             'role' => 'assistant'
         ]);
 
-        $this->messages = $this->chat->messages;
+        $this->chatMessages = $this->chat->messages;
         $this->openAiResponse = '';
     }
 
-    public function generateSystemPrompt(){
+    public function generateSystemPrompt()
+    {
         $context = $this->getContextFromKnowledgeBase($this->userPrompt);
 
         $system_template = "
@@ -131,7 +177,8 @@ class Chatbot extends Component
         return $system_prompt;
     }
 
-    public function getContextFromKnowledgeBase($message){
+    public function getContextFromKnowledgeBase($message)
+    {
         $vector = json_encode(OpenAiService::createEmbedding($message));
 
         $result = DB::table('embeddings')
@@ -148,24 +195,14 @@ class Chatbot extends Component
         return $context;
     }
 
-    public function createChat(){
-        $titleCreation = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => 'Sei un creatore di titoli'
-                ],
-                [
-                    'role' => 'user',
-                    'content' =>  "Crea un titolo di al massimo 30 caratteri per una chat con questo messaggio: {$this->userPrompt}"
-                ]
-            ]
-        ]);
+    public function createChat()
+    {
+        $title = OpenAiService::createChatTitle($this->userPrompt);
 
         $this->chat = Chat::create([
-            'title' => $titleCreation->choices[0]->message->content
+            'title' => $title
         ]);
+
         $this->chat_id = $this->chat->id;
         $this->dispatch('chatbot:select-chat', $this->chat_id);
     }
