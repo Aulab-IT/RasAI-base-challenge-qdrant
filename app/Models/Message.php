@@ -10,7 +10,7 @@ class Message extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['content', 'chat_id' , 'role'];
+    protected $fillable = ['content', 'chat_id' , 'role' , 'audio_path'];
 
     public function chat()
     {

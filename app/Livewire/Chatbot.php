@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Chat;
+use App\Models\Message;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -94,7 +95,7 @@ class Chatbot extends Component
     {
         $this->validate();
 
-        $this->handleAudioMessage();
+        $audioPath = $this->handleAudioMessage();
 
         $this->userPrompt = $this->currentMessage;
 
@@ -102,7 +103,7 @@ class Chatbot extends Component
             $this->createChat();
         }
         
-        $this->createMessage(self::ROLE_USER, $this->currentMessage);
+        $this->createMessage(self::ROLE_USER, $this->currentMessage , $audioPath);
 
         $this->currentMessage = '';
 
@@ -118,14 +119,19 @@ class Chatbot extends Component
            $this->currentMessage = $response;
            $this->audioMessage = null;
            $this->audioState = 'idle';
+
+           return $path;
         }
+
+        return null;
     }
 
-    private function createMessage($role, $content)
+    private function createMessage($role, $content , $audioPath = null)
     {
         $this->chat->messages()->create([
             'content' => $content,
-            'role' => $role
+            'role' => $role,
+            'audio_path' => $audioPath
         ]);
 
         $this->chatMessages = $this->chat->messages;
@@ -152,14 +158,29 @@ class Chatbot extends Component
             }
 
         }
+        
 
-        $this->chat->messages()->create([
+        $message = $this->chat->messages()->create([
             'content' => $this->openAiResponse,
-            'role' => 'assistant'
+            'role' => 'assistant',
         ]);
 
         $this->chatMessages = $this->chat->messages;
         $this->openAiResponse = '';
+
+        $this->js('$wire.generateTextToSpeech(' . $message->id . ')');
+
+    }
+
+    public function generateTextToSpeech(Message $message)
+    {
+        $path = OpenAiService::textToSpeech($message->content);
+
+        $message->update([
+            'audio_path' => $path
+        ]);
+
+        $this->chatMessages = $this->chat->messages;
     }
 
     public function generateSystemPrompt()

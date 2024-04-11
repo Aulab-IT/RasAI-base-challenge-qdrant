@@ -10,6 +10,9 @@
                 </div>
                 <div class="">
                     <p>{{ $chatMessage->content }}</p>
+                    @if ($chatMessage->audio_path)
+                        <audio controls src="{{ Storage::url($chatMessage->audio_path) }}"></audio>
+                    @endif
                 </div>
             </div>
         @empty
@@ -51,7 +54,6 @@
         </button>
         @endif
     </form>
-    {{ $audioState }}
 </div>
 
 @script

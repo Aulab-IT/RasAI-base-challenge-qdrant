@@ -58,4 +58,22 @@ class OpenAiService {
 
         return $response->text;
     }
+
+    public static function textToSpeech($text)
+    {
+        $response = OpenAI::audio()->speech([
+            'model' => 'tts-1',
+            'input' => $text,
+            'voice' => 'alloy',
+        ]);
+
+        // Save the audio file in local storage in tts folder with laravel
+        $audioName = uniqid() . '.mp3';
+        $storage_path = storage_path('app/public/tts/' . $audioName);
+        file_put_contents($storage_path, $response);
+
+        $path = 'tts/' . $audioName;
+
+        return $path;
+    }
 }
