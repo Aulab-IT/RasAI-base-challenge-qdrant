@@ -2,7 +2,8 @@
 
 - Modificare Home in Pagina Chat 🐛
 - Spostare la lista chat in sidebar 🐨
-- Creare player custom per audio
+- Creare player custom per audio 🦄
 - Tasto download immagini
-- Dark mode
-- Login / Register Utente
+- Responsive design
+- Dark mode [EXTRA]
+- Login / Register Utente [EXTRA]

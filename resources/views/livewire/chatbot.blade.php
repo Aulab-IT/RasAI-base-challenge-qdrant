@@ -34,7 +34,19 @@
                         <p>{{ $chatMessage->content }}</p>
                     @endif
                     @if ($chatMessage->audio_path)
-                        <audio controls src="{{ Storage::url($chatMessage->audio_path) }}"></audio>
+                        <livewire:player-audio 
+                            :path="Storage::url($chatMessage->audio_path)"
+                            id="{{ $chatMessage->id }}"    
+                        />
+            
+                        {{-- <div>
+                            <button class="btn btn-outline-accent rounded-pill">
+                                <i class="bi bi-play me-1"></i>
+                                <i class="bi bi-soundwave"></i>
+                            </button>
+                            {{ Storage::url($chatMessage->audio_path) }}
+                            <audio src="{{ Storage::url($chatMessage->audio_path) }}"></audio>
+                        </div> --}}
                     @endif
                 </div>
             </div>
