@@ -1,5 +1,5 @@
 <div class="chat-container">
-    <div class="chat-header my-3 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between">
+    <div class="chat-header my-3 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between pe-2">
         <h2 class="fs-4 text-truncate">{{ $chat?->title }}</h2>
 
         {{-- switch option --}}
