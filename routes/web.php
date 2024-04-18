@@ -15,10 +15,6 @@ use App\Http\Controllers\DocumentController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
 Route::controller(DocumentController::class)
     ->prefix('documents')
     ->group(function(){
@@ -30,7 +26,6 @@ Route::controller(DocumentController::class)
     });
 
 Route::controller(ChatController::class)
-    ->prefix('chat')
     ->group(function(){
         Route::get('/', 'index')->name('chat.index');
     });
