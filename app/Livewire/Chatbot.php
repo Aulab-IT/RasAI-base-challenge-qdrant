@@ -80,10 +80,10 @@ class Chatbot extends Component
         $this->resetAudio();
     }
 
-    public function toggleImageMode()
-    {
-        $this->imageMode = !$this->imageMode;
-    }
+    // public function toggleImageMode()
+    // {
+    //     $this->imageMode = !$this->imageMode;
+    // }
 
     private function resetChat()
     {

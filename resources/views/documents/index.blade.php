@@ -1,28 +1,30 @@
 <x-layout>
     
-    <div class="container">
+    <div class="container mt-5 mt-md-0">
         <div class="row gap-4">
             <div class="col-12">
-                <h1>Documents</h1>
+                <div class="d-flex justify-content-between">
+                    <h1>Documents</h1>
+                    <button class="btn btn-primary-custom fw-bold fs-5" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="bi bi-upload"></i>
+                        Upload a file
+                    </button>
+                </div>
             </div>
             <div class="col-12">
-                <div class="card ragsy-card bg-body-tertiary d-flex flex-column gap-3">
+                <div class="card ragsy-card mt-4 d-flex flex-column gap-3">
                     <div class="d-flex justify-content-between">
-                        <h2 class="fs-4">Files</h2>
-                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                            <i class="bi bi-upload"></i>
-                            Upload a file
-                        </button>
+                        {{-- <h1 class="fs-2">Files</h1> --}}
                         {{-- <label class="btn btn-outline-primary" for="file">
                             <input wire:change="save" wire:model="file" accept="application/pdf" class="d-none" type="file" name="file" id="file">
                             <i class="bi bi-upload"></i>
                             Upload a file
                         </label> --}}
                     </div>
-                    <table class="table table-striped">
+                    <table class="">
                         <thead>
                           <tr>
-                            <th scope="col">#</th>
+                            {{-- <th scope="col">#</th> --}}
                             <th scope="col">Name</th>
                             <th scope="col">Type</th>
                             <th scope="col">Size</th>
@@ -36,17 +38,17 @@
                             @foreach ($documents as $document)
 
                             <tr>
-                                <th scope="row">{{ $loop->iteration }}</th>
+                                {{-- <th scope="row">{{ $loop->iteration }}</th> --}}
                                 <td>{{ $document->name }}</td>
                                 <td>{{ $document->mime }}</td>
                                 <td>{{ $document->getHumanReadableSizeAttribute() }}</td>
                                 <td>{{ $document->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <div class="d-flex gap-1">
-                                        <a href="{{ route('documents.test', $document) }}" class="btn btn-outline-primary btn-sm">
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('documents.test', $document) }}" class="btn btn-outline-light btn-sm">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('documents.download', $document) }}" class="btn btn-outline-primary btn-sm">
+                                        <a href="{{ route('documents.download', $document) }}" class="btn btn-outline-light btn-sm">
                                             <i class="bi bi-download"></i>
                                         </a>
                                         <form action="{{ route('documents.destroy', $document) }}" method="post">
@@ -62,6 +64,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
         </div>
@@ -80,8 +83,8 @@
                     <div class="row gap-3">
                         <div class="col-12">
                             <div class="mb-3 has-validation">
-                                <label for="name">Name of file</label>
-                                <input type="text" name="name" class="form-control" id="name" placeholder="name@example.com">
+                                <label for="name">Name of file*</label>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="name@example.com" required>
                                 @error('name')     
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -106,8 +109,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary-custom">Upload</button>
                 </div>
             </form>
         </div>

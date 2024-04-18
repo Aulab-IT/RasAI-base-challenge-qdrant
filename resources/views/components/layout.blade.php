@@ -7,16 +7,19 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ojuju:wght@200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css' , 'resources/js/app.js'])
   </head>
   <body data-bs-theme="dark">
-    <div class="d-flex">
-        <x-sidebar/>
-        <main class="w-100 p-4">
+    <div class="d-block d-md-flex">
+      
+      <x-sidebar/>
+        <main class="w-100 p-md-4">
             {{ $slot }}
         </main>
     </div>
+   
+
   </body>
 </html>
