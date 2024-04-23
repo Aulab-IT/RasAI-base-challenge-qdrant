@@ -13,20 +13,6 @@ h1, h2, h3, h4, h5, h6{
 
 body {
     background-color: var(--primary-color);
-    /* background-image: url('/public/bgImg2.jpeg');
-    background-size: cover;
-    background-position: center; */
-    /* --x: calc(var(--posX, 0) * 1px);
-  --y: calc(var(--posY, 0) * 1px);
-  background-image: 
-    linear-gradient(360deg, rgb(211 255 215), rgb(0 0 0)), 
-    radial-gradient( 90% 100% at calc( 50% + var(--x)) calc( 0% + var(--y)), rgb(200 200 200), rgb(022 000 045)), 
-    radial-gradient(100% 100% at calc( 80% - var(--x)) calc( 0% - var(--y)), rgb(126, 128, 30), rgb(036 000 000)), 
-    radial-gradient(150% 210% at calc(100% + var(--x)) calc( 0% + var(--y)), rgb(020 175 125), rgb(25, 28, 120)), 
-    radial-gradient(100% 100% at calc(100% - var(--x)) calc(30% - var(--y)), rgb(255 077 000), rgb(23, 59, 69)), 
-    linear-gradient(60deg, rgb(255 000 000), rgb(34, 22, 80));
-    background-blend-mode: overlay, overlay, difference, difference, difference, normal; */
-
 }
 
 /* width */
@@ -36,12 +22,12 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #3f3f3f;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: var(--accent-color);
 }
 
 /* Handle on hover */
@@ -60,11 +46,7 @@ body {
     /* box-shadow: 0 0 5px rgba(245, 245, 245, 0.1); */
     padding: 16px;
     background:rgba(26, 26, 26, 0.297);
-    /* box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ); */
-    /* backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    border: 1px solid rgba( 255, 255, 255, 0.18 ); */
-
+    
 }
 
 [data-bs-theme="dark"] .dropzone-area {
@@ -94,8 +76,6 @@ body {
         color: var(--primary-color);
     }
 
-  
-
 }
 
 .btn-outline-custom 
@@ -105,11 +85,21 @@ body {
     &:hover{
         border: 1px solid #525252;
     }
+    &:active{
+        border: 1px solid var(--accent-color);
+    }
 }
 
 .btn-outline-accent {
     border: 1px solid var(--accent-color);
     color: var(--accent-color);
+    font-weight: 700;
+}
+
+.btn-outline-accent:hover {
+    border: 1px solid var(--accent-color);
+    background-color: var(--accent-color);
+    color: var(--primary-color);
 }
 
 /* sidebar */
@@ -134,6 +124,28 @@ body {
     font-weight: 800;
 }
 
+.btn-chat {
+    position: relative;
+    transition: all .4s;
+}
+
+.btn-chat .deleteBtn {
+    display: none;
+}
+
+.btn-chat:hover .deleteBtn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: block;    
+    background-color: inherit;
+}
+
+
+.btn-chat .titleBtn , .deleteBtn {
+    color: inherit;
+}
+
 
 /* chat */
 
@@ -149,7 +161,10 @@ body {
     display: flex;
     column-gap: 24px;
     padding: 16px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #3f3f3f;
+    box-shadow: 0px -16px 44px 5px rgba(26,26,26,0.68);
+    -webkit-box-shadow: 0px -16px 44px 5px rgba(26,26,26,0.68);
+    -moz-box-shadow: 0px -16px 44px 5px rgba(26,26,26,0.68);
 }
 
 .chat-input input {
@@ -187,6 +202,8 @@ body {
     display: flex;
     align-items: center;
     column-gap: 16px;
+    font-weight: 500;
+    line-height: 28px;
 }
 
 /* .chat-box .chat-message-unsent {
@@ -196,7 +213,6 @@ body {
 .chat-box .chat-message.sent {
     background-color: rgb(40, 40, 40);
     color: white;
-    
 }
 
 .chat-box .chat-message.received {
@@ -205,9 +221,14 @@ body {
     align-self: flex-start;
 }
 
+.chat-box .chat-message-avatar {
+    display: flex;
+    /* margin-bottom: 10px; */
+}
+
 .chat-box .chat-message-avatar img {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     margin-right: 16px;
 }
@@ -226,75 +247,12 @@ body {
     outline-color: #555;
 }
 
+.generatedImage img {
+    width: 512px;
+}
 
 
 /* switch */
-
-/* .toggle-cont {
-    width: 50px;
-    height: 20px;
-    border-radius: 9999px;
-}
-
-.toggle-cont .toggle-input {
-    display: none;
-}
-
-.toggle-cont .toggle-label {
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    padding: 6px;
-    width: 100%;
-    height: 100%;
-    background: #272727;
-    border-radius: 9999px;
-    box-sizing: content-box;
-    box-shadow: 0px 0px 16px -8px #fefefe;
-}
-
-.toggle-cont .toggle-label .cont-label-play {
-    position: relative;
-    width: 20px;
-    aspect-ratio: 1 / 1;
-    background: #5e5e5e;
-    border-radius: 9999px;
-    transition: all 0.5s cubic-bezier(1, 0, 0, 1);
-}
-
-.toggle-cont .toggle-input:checked + .toggle-label .cont-label-play {
-    background: var(--accent-color);
-    transform: translateX(30px);
-}
-
-.toggle-cont .toggle-label .label-play {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-block;
-    width: 20px;
-    aspect-ratio: 1 / 1;
-    background: #fefefe;
-    border-radius: 4px;
-    clip-path: polygon(25% 0, 75% 50%, 25% 100%, 25% 51%);
-
-    transition: all 0.5s cubic-bezier(1, 0, 0, 1);
-}
-.toggle-cont .toggle-label .label-play::before {
-    font-family: "Bootstrap-icons";
-    content: '\F228';
-    width: 30px;
-    background: #efefef;
-
-}
-
-
-
-.toggle-cont .toggle-input:checked + .toggle-label .label-play {
-    width: 0px;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-} */
 
 .checkbox-wrapper-35 .switch {
     display: none;
@@ -454,26 +412,44 @@ table th {
     text-transform: uppercase;
 
 }
-
-
-
-
   
 @media screen and (max-width: 600px) {
     /* sidebar */
     .sidebar {
         min-height: 80vh;
+        width: auto;
     }
 
     /* chat */
 
     .chat-input {
         padding: 0px;
+        border-top: none;
+        -webkit-box-shadow: 0px -8px 56px 5px rgba(26, 26, 26, 1);
+        -moz-box-shadow: 0px -8px 56px 5px rgba(26, 26, 26, 1);
+        box-shadow: 0px -8px 56px 5px rgba(26, 26, 26, 1);
+    }
+
+
+    .chat-box .chat-message {
+        font-size: 18px;
+        column-gap: 0px;
     }
 
     .chatlist-container {
         height: auto;
     }
+
+    .chat-box {
+        padding: 0px;
+    }
+
+    .generatedImage img {
+        width: 100%;
+        max-width: 512px;
+    }
+
+
 
     /* documents table */
 
@@ -521,3 +497,7 @@ table th {
       border-bottom: 0;
     }
   }
+
+
+
+  

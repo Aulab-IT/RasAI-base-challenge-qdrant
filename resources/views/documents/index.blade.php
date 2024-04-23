@@ -1,18 +1,18 @@
 <x-layout>
     
-    <div class="container mt-5 mt-md-0">
+    <div class="container">
         <div class="row gap-4">
             <div class="col-12">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                     <h1>Documents</h1>
                     <button class="btn btn-primary-custom fw-bold fs-5" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                        <i class="bi bi-upload"></i>
+                        <i class="bi bi-upload me-2"></i>
                         Upload a file
                     </button>
                 </div>
             </div>
             <div class="col-12">
-                <div class="card ragsy-card mt-4 d-flex flex-column gap-3">
+                <div class="card ragsy-card mt-md-4 d-flex flex-column gap-3">
                     <div class="d-flex justify-content-between">
                         {{-- <h1 class="fs-2">Files</h1> --}}
                         {{-- <label class="btn btn-outline-primary" for="file">
@@ -24,7 +24,6 @@
                     <table class="">
                         <thead>
                           <tr>
-                            {{-- <th scope="col">#</th> --}}
                             <th scope="col">Name</th>
                             <th scope="col">Type</th>
                             <th scope="col">Size</th>
@@ -35,10 +34,8 @@
                           </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            @foreach ($documents as $document)
-
+                            @forelse ($documents as $document)
                             <tr>
-                                {{-- <th scope="row">{{ $loop->iteration }}</th> --}}
                                 <td>{{ $document->name }}</td>
                                 <td>{{ $document->mime }}</td>
                                 <td>{{ $document->getHumanReadableSizeAttribute() }}</td>
@@ -61,10 +58,14 @@
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td class="fs-4 fw-bold">No uploaded files</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
-                    
+                  
                 </div>
             </div>
         </div>
@@ -72,7 +73,7 @@
 
     <!-- Upload Modal -->
     <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <form method="post" action="{{ route('documents.store') }}" enctype="multipart/form-data" class="modal-content">
                 @csrf
                 <div class="modal-header">

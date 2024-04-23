@@ -87,6 +87,14 @@ class OpenAiService {
             'response_format' => 'url',
         ]);
 
-        return $response->data[0]->url;
+        $openAIUrl = $response->data[0]->url;
+
+        $imageName = uniqid() . '.png';
+        $storage_path = storage_path('app/public/image/' . $imageName);
+        file_put_contents($storage_path, file_get_contents($openAIUrl));
+
+        $path = 'image/' . $imageName;
+
+        return $path;
     }
 }

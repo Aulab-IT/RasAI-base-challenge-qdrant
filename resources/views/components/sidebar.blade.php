@@ -2,7 +2,7 @@
   <button class="btn d-md-none ms-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasResponsive" aria-controls="offcanvasResponsive">
     <i class="bi bi-list fs-1"></i>
   </button>
-  <h1 class="mb-0 d-block d-md-none">RagsAI</h1>
+  {{-- <h1 class="mb-0 d-block d-md-none">RagsAI</h1> --}}
 </div>
 
 <div class="offcanvas-md offcanvas-start" tabindex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">

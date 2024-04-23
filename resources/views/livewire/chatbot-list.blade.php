@@ -8,12 +8,18 @@
     <div class="chatlist-container">
 
         @forelse ($chats as $chat)
-        <button 
-            wire:click="selectChat({{ $chat->id }})" 
-            class="btn mb-3 {{ $chat->id == $chat_id ? 'btn-primary-custom' : 'btn-outline-custom' }} w-100 text-start text-truncate"
+        <div 
+            
+            class="p-0 btn mb-3 btn-chat {{ $chat->id == $chat_id ? 'btn-primary-custom' : 'btn-outline-custom' }} w-100 "
             >
-            {{ $chat->title }}
-        </button>
+            <button class="btn titleBtn w-100 text-start text-truncate" wire:click="selectChat({{ $chat->id }})" >
+                {{ $chat->title }}
+            </button> 
+
+            <button class="btn deleteBtn" wire:click="deleteChat({{ $chat->id }})">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
         @empty
         
         @endforelse

@@ -38,6 +38,18 @@ class ChatbotList extends Component
         }
     }
 
+    public function deleteChat($chat_id){
+        $chat = Chat::find($chat_id);
+        $chat->delete();
+
+        if($this->chat_id == $chat_id){
+            $this->newChat();
+        }
+
+        $this->chats = Chat::all()->reverse();
+        
+    }
+
     #[On('chatbot:select-chat')]
     public function changeChat($chat_id)
     {

@@ -1,9 +1,6 @@
 <div class="chat-container">
     <div class="chat-header my-3 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between pe-2">
         <h2 class="fs-4 text-truncate">{{ $chat?->title }}</h2>
-
-        {{-- switch option --}}
-
         <div class="checkbox-wrapper-35 mt-3 mt-lg-0">
             <input value="private" name="switch" id="switch" type="checkbox" class="switch" wire:model.live="imageMode">
             <label for="switch">
@@ -14,22 +11,33 @@
               </span>
             </label>
         </div>
-       
-
     </div>
-    <div class="chat-box">
+    <div class="chat-box mt-3 mt-md-0">
         @forelse ($chatMessages as $chatMessage)
             <div class="chat-message {{ $chatMessage->role == 'user' ? 'sent' : '' }}">
                 <div class="chat-message-avatar">
                     @if($chatMessage->role == 'assistant')
-                    <img src="/LOGO-DarkBG.png" alt="Avatar">
+                    <img src="/RagsAI-LOGO.png" alt="Avatar">
+                    {{-- <p class="fw-bold">RagsAI</p> --}}
                     @else 
                     <img src="https://github.com/mdo.png" alt="" class="">
+                    {{-- <p class="fw-bold">Mario</p> --}}
                     @endif
                 </div>
+                
                 <div class="">
                     @if($chatMessage->is_image_content)
-                        <img width="512" src="{{ $chatMessage->content }}" alt="Image">
+                    <div class="generatedImage">
+                        <img src="{{ Storage::url($chatMessage->content) }}" alt="Generated Image">
+                        <a href="{{ Storage::url($chatMessage->content) }}" download target="_blank" class="btn btn-outline-custom link-body-emphasis ms-md-3 mt-3"> 
+                            <span class="d-inline d-md-none">Download</span>
+                            <i class="bi bi-download fs-5 ms-1 ms-md-0"></i>
+                        </a>
+                    </div>
+                        {{-- <button class="btn btn-primary-custom" id="btn">
+                            <i class="bi bi-download"></i>
+                        </button> --}}
+
                     @else
                         <p>{{ $chatMessage->content }}</p>
                     @endif
@@ -63,20 +71,6 @@
         </div>
     </div>
     <form wire:submit="ask" class="chat-input align-items-center">
-        {{-- <div class="form-check form-switch">
-            <input wire:model.live="imageMode" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-            <label class="form-check-label" for="flexSwitchCheckDefault">{{ var_export($imageMode) }}</label>
-        </div> --}}
-        {{-- <div class="toggle-cont">
-            <input class="toggle-input" id="toggle" name="toggle" type="checkbox" />
-            <label class="toggle-label" for="toggle">
-              <div class="cont-label-play">
-                <span class="label-play"></span>
-              </div>
-            </label>
-          </div> --}}
-        
-          
           
 {{--     
         <button type="button" wire:click="toggleImageMode" class="btn">
@@ -203,6 +197,8 @@ let recorder = {
 audioRecorderBtn.addEventListener('click', () => recorder.start());
 recordDeleteBtn.addEventListener('click', () => recorder.delete() );
 recordStopBtn.addEventListener('click', () => recorder.stop());
+
+
 
 </script>
 @endscript
