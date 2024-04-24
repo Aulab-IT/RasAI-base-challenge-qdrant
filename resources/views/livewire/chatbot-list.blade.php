@@ -1,4 +1,4 @@
-<div>
+<div class="mb-auto">
     <button 
         wire:click="newChat" 
         class="btn mb-3 btn-outline-accent w-100 text-start text-truncate"

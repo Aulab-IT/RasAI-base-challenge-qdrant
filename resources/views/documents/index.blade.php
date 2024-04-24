@@ -13,14 +13,6 @@
             </div>
             <div class="col-12">
                 <div class="card ragsy-card mt-md-4 d-flex flex-column gap-3">
-                    <div class="d-flex justify-content-between">
-                        {{-- <h1 class="fs-2">Files</h1> --}}
-                        {{-- <label class="btn btn-outline-primary" for="file">
-                            <input wire:change="save" wire:model="file" accept="application/pdf" class="d-none" type="file" name="file" id="file">
-                            <i class="bi bi-upload"></i>
-                            Upload a file
-                        </label> --}}
-                    </div>
                     <table class="">
                         <thead>
                           <tr>
@@ -33,18 +25,16 @@
                             </th>
                           </tr>
                         </thead>
-                        <tbody class="table-group-divider">
+                        <tbody>
                             @forelse ($documents as $document)
                             <tr>
-                                <td>{{ $document->name }}</td>
-                                <td>{{ $document->mime }}</td>
-                                <td>{{ $document->getHumanReadableSizeAttribute() }}</td>
-                                <td>{{ $document->created_at->diffForHumans() }}</td>
+                                <td data-label="Name:">{{ $document->name }}</td>
+                                <td data-label="Type:">{{ $document->mime }}</td>
+                                <td data-label="Size:">{{ $document->getHumanReadableSizeAttribute() }}</td>
+                                <td data-label="Uploaded at:">{{ $document->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <div class="d-flex gap-2">
-                                        <a href="{{ route('documents.test', $document) }}" class="btn btn-outline-light btn-sm">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
+                                    <div class="d-flex gap-3">
+                                       
                                         <a href="{{ route('documents.download', $document) }}" class="btn btn-outline-light btn-sm">
                                             <i class="bi bi-download"></i>
                                         </a>

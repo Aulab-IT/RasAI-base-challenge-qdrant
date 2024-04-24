@@ -30,8 +30,8 @@
                     <div class="generatedImage">
                         <img src="{{ Storage::url($chatMessage->content) }}" alt="Generated Image">
                         <a href="{{ Storage::url($chatMessage->content) }}" download target="_blank" class="btn btn-outline-custom link-body-emphasis ms-md-3 mt-3"> 
-                            <span class="d-inline d-md-none">Download</span>
-                            <i class="bi bi-download fs-5 ms-1 ms-md-0"></i>
+                            {{-- <span class="d-inline d-md-none">Download</span> --}}
+                            <i class="bi bi-download fs-5"></i>
                         </a>
                     </div>
                         {{-- <button class="btn btn-primary-custom" id="btn">
@@ -47,14 +47,6 @@
                             id="{{ $chatMessage->id }}"    
                         />
             
-                        {{-- <div>
-                            <button class="btn btn-outline-accent rounded-pill">
-                                <i class="bi bi-play me-1"></i>
-                                <i class="bi bi-soundwave"></i>
-                            </button>
-                            {{ Storage::url($chatMessage->audio_path) }}
-                            <audio src="{{ Storage::url($chatMessage->audio_path) }}"></audio>
-                        </div> --}}
                     @endif
                 </div>
             </div>
@@ -70,7 +62,7 @@
             <p wire:stream="generateResponse">{{ $openAiResponse }}</p>
         </div>
     </div>
-    <form wire:submit="ask" class="chat-input align-items-center">
+    <form wire:submit="ask" class="chat-input py-3 align-items-center">
           
 {{--     
         <button type="button" wire:click="toggleImageMode" class="btn">
@@ -86,12 +78,17 @@
                 @error('currentMessage') <span class="error">{{ $message }}</span> @enderror
             </div>
             <div id="audioWrapper" class="w-100 d-flex justify-content-between align-items-center @if($audioState != 'completed') d-none @endif">
-                <button type="button" id="recordDeleteBtn" class="btn btn-danger">
+                <button type="button" id="recordDeleteBtn" class="btn btn-danger d-none d-md-block">
                     <i class="bi bi-trash"></i>
                 </button>
+                <a href="" class="link-body-emphasis d-block d-md-none" id="recordDeleteBtn">
+                    <i class="bi bi-trash fs-3 me-2"></i>
+
+                </a>
                 <div id="playerWrapper" class="flex-grow-1 text-center" wire:ignore>
                     
                 </div>
+                
             </div>
         </div>
         <button id="audioRecorderBtn" type="button" class="btn btn-primary-custom @if(!empty($currentMessage) || $audioState != 'idle') d-none @endif ">
