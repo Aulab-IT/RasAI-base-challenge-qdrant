@@ -60,30 +60,19 @@ class Chatbot extends Component
         $this->loadChat($chat_id);
     } 
 
-    // #[On('startRecording')]
-    // public function startRecording()
-    // {
-    //     $this->dispatch('startRecording')->self();
-    // }
-
     private function loadChat($chat_id)
     {
+        $this->resetAudio();
+
         if(!$chat_id){
             $this->resetChat();
-            $this->resetAudio();
             return;
         }
         
         $this->chat_id = $chat_id;
         $this->chat = Chat::find($chat_id);
         $this->chatMessages = $this->chat->messages;
-        $this->resetAudio();
     }
-
-    // public function toggleImageMode()
-    // {
-    //     $this->imageMode = !$this->imageMode;
-    // }
 
     private function resetChat()
     {

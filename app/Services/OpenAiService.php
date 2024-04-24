@@ -68,13 +68,11 @@ class OpenAiService {
         ]);
 
         // Save the audio file in local storage in tts folder with laravel
-        $audioName = uniqid() . '.mp3';
-        $storage_path = storage_path('app/public/tts/' . $audioName);
+        $audioFileName = 'tts/' . uniqid() . '.mp3';
+        $storage_path = storage_path('app/public/' . $audioFileName);
         file_put_contents($storage_path, $response);
 
-        $path = 'tts/' . $audioName;
-
-        return $path;
+        return $audioFileName;
     }
 
     public static function createImage($prompt)
@@ -89,12 +87,10 @@ class OpenAiService {
 
         $openAIUrl = $response->data[0]->url;
 
-        $imageName = uniqid() . '.png';
-        $storage_path = storage_path('app/public/image/' . $imageName);
+        $imageFileName = 'image/' . uniqid() . '.png';
+        $storage_path = storage_path('app/public/' . $imageFileName);
         file_put_contents($storage_path, file_get_contents($openAIUrl));
 
-        $path = 'image/' . $imageName;
-
-        return $path;
+        return $imageFileName;
     }
 }
