@@ -1,6 +1,6 @@
 <div class="chat-container">
     <div class="chat-header my-3 d-flex flex-column flex-lg-row align-items-lg-center justify-content-between pe-2">
-        <h2 class="fs-4 text-truncate">{{ $chat?->title }}</h2>
+        <h2 class="fs-4 text-truncate">{{ $chatTitle ?? '' }}</h2>
         <div class="checkbox-wrapper-35 mt-3 mt-lg-0">
             <input value="private" name="switch" id="switch" type="checkbox" class="switch" wire:model.live="imageMode">
             <label for="switch">
@@ -14,13 +14,13 @@
     </div>
     <div class="chat-box mt-3 mt-md-0">
         @forelse ($chatMessages as $chatMessage)
-            <div class="chat-message {{ $chatMessage->role == 'user' ? 'sent' : '' }}">
+            <div wire:key="{{ $chatMessage->id }}" class="chat-message {{ $chatMessage->role == 'user' ? 'sent' : '' }}">
                 <div class="chat-message-avatar">
                     @if($chatMessage->role == 'assistant')
                     <img src="/RagsAI-LOGO.png" alt="Avatar">
                     {{-- <p class="fw-bold">RagsAI</p> --}}
                     @else 
-                    <img src="https://github.com/mdo.png" alt="" class="">
+                    <img src="/user.png" alt="" class="">
                     {{-- <p class="fw-bold">Mario</p> --}}
                     @endif
                 </div>
@@ -41,12 +41,17 @@
                     @else
                         <p>{{ $chatMessage->content }}</p>
                     @endif
+                    @if (in_array($chatMessage->id , $audioProcessingIds))
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    @endif
                     @if ($chatMessage->audio_path)
                         <livewire:player-audio 
+                            :key="$chatMessage->audio_path"
                             :path="Storage::url($chatMessage->audio_path)"
                             id="{{ $chatMessage->id }}"    
                         />
-            
                     @endif
                 </div>
             </div>
@@ -57,7 +62,22 @@
                 </div>
             </div>
         @endforelse
+        @if($isGeneratingImage)
+        <div class="chat-message">
+            <div class="chat-message-avatar">
+                <img src="/RagsAI-LOGO.png" alt="Avatar">
+            </div>
+            
+            <div class="">
+                <div class="generatedImage">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+        @endif
         <div>
             <p wire:stream="generateResponse">{{ $openAiResponse }}</p>
         </div>
@@ -112,7 +132,13 @@
 const audioRecorderBtn = document.querySelector('#audioRecorderBtn');
 const recordDeleteBtn = document.querySelector('#recordDeleteBtn');
 const recordStopBtn = document.querySelector('#recordStopBtn');
+const chatBox = document.querySelector('.chat-box');
 
+$wire.on('scrollChatToBottom', () => {
+    setTimeout(() => {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 500);
+});
 
 let recorder = {
     mediaRecorder: null,

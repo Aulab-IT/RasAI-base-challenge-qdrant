@@ -23,8 +23,8 @@ class Chatbot extends Component
     #[Url(as: 'c')] 
     public $chat_id = null;
 
-    public $chat = null;
-    public $chatMessages = [];
+    // public $chat = null;
+    // public $chatMessages = [];
 
     public $currentMessage = '';
     public $openAiResponse = '';
@@ -32,8 +32,10 @@ class Chatbot extends Component
 
     public $audioMessage = '';
     public $audioState = 'idle';
+    public $audioProcessingIds = [];
 
     public $imageMode = false;
+    public $isGeneratingImage = false;
 
     public function mount()
     {   
@@ -70,14 +72,10 @@ class Chatbot extends Component
         }
         
         $this->chat_id = $chat_id;
-        $this->chat = Chat::find($chat_id);
-        $this->chatMessages = $this->chat->messages;
     }
 
     private function resetChat()
     {
-        $this->chat = null;
-        $this->chatMessages = [];
         $this->chat_id = null;
     }
 
@@ -91,51 +89,45 @@ class Chatbot extends Component
     {
         $this->validate();
 
-        $audioPath = $this->handleAudioMessage();
+        $audioPath = null;
 
+        if($this->audioMessage){
+            $resultAudioMessage = $this->handleAudioMessage();
+            $this->currentMessage = $resultAudioMessage[0];
+            $this->audioMessage = null;
+            $this->audioState = 'idle';
+    
+            $audioPath = $resultAudioMessage[1];
+        }
+ 
         $this->userPrompt = $this->currentMessage;
 
-        if(!$this->chat){
+        if(!$this->chat_id){
             $this->createChat();
         }
         
-        $this->createMessage(self::ROLE_USER, $this->currentMessage , $audioPath);
+        $chat = Chat::find($this->chat_id);
+        $chat->messages()->create([
+            'content' =>  $this->currentMessage,
+            'role' => self::ROLE_USER,
+            'audio_path' => $audioPath
+        ]);
 
         $this->currentMessage = '';
 
-        // TODO :: Generare immagine nel caso imageMode sia attivo altrimenti generare risposta
         if($this->imageMode){
             $this->js('$wire.generateImage()');
+            $this->isGeneratingImage = true;
         }else{
             $this->js('$wire.generateOpenAiResponse()');
         }
     }
 
-    private function handleAudioMessage()
-    {
-        if($this->audioMessage){
-           $path = $this->audioMessage->store('audio', 'public');
-           $response = OpenAiService::speechToText(storage_path('app/public/' . $path));
+    private function handleAudioMessage(){
+        $path = $this->audioMessage->store('audio', 'public');
+        $response = OpenAiService::speechToText(storage_path('app/public/' . $path));
 
-           $this->currentMessage = $response;
-           $this->audioMessage = null;
-           $this->audioState = 'idle';
-
-           return $path;
-        }
-
-        return null;
-    }
-
-    private function createMessage($role, $content , $audioPath = null)
-    {
-        $this->chat->messages()->create([
-            'content' => $content,
-            'role' => $role,
-            'audio_path' => $audioPath
-        ]);
-
-        $this->chatMessages = $this->chat->messages;
+        return [$response , $path];
     }
 
     public function generateOpenAiResponse()
@@ -160,15 +152,15 @@ class Chatbot extends Component
 
         }
         
-
-        $message = $this->chat->messages()->create([
+        $message = Message::create([
             'content' => $this->openAiResponse,
             'role' => 'assistant',
+            'chat_id' => $this->chat_id
         ]);
 
-        $this->chatMessages = $this->chat->messages;
         $this->openAiResponse = '';
 
+        $this->audioProcessingIds[] = $message->id;
         $this->js('$wire.generateTextToSpeech(' . $message->id . ')');
 
     }
@@ -179,13 +171,15 @@ class Chatbot extends Component
 
         $image_url = OpenAiService::createImage($prompt);
 
-        $message = $this->chat->messages()->create([
+        Message::create([
             'content' => $image_url,
             'role' => 'assistant',
-            'is_image_content' => true
+            'is_image_content' => true,
+            'chat_id' => $this->chat_id
         ]);
 
-        $this->chatMessages = $this->chat->messages;
+        $this->isGeneratingImage = false;
+
     }
 
     public function generateTextToSpeech(Message $message)
@@ -196,7 +190,7 @@ class Chatbot extends Component
             'audio_path' => $path
         ]);
 
-        $this->chatMessages = $this->chat->messages;
+        $this->audioProcessingIds = array_diff($this->audioProcessingIds, [$message->id]);
     }
 
     public function generateSystemPrompt()
@@ -236,16 +230,27 @@ class Chatbot extends Component
     {
         $title = OpenAiService::createChatTitle($this->userPrompt);
 
-        $this->chat = Chat::create([
+        $chat = Chat::create([
             'title' => $title
         ]);
 
-        $this->chat_id = $this->chat->id;
+        $this->chat_id = $chat->id;
         $this->dispatch('chatbot:select-chat', $this->chat_id);
     }
 
     public function render()
     {
-        return view('livewire.chatbot');
+        $chatMessages = [];
+        $chatTitle = '';
+
+        $chat = Chat::find($this->chat_id);
+        
+        if($chat){
+            $chatMessages = $chat->messages;
+            $chatTitle = $chat->title;
+        }
+
+        $this->dispatch('scrollChatToBottom');
+        return view('livewire.chatbot' , compact('chatMessages' , 'chatTitle'));
     }
 }
