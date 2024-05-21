@@ -52,7 +52,7 @@
       <hr>
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+          <img src="/user.png" alt="" width="32" height="32" class="rounded-circle me-2">
           <strong>Mario Rossi</strong>
         </a>
         <ul class="dropdown-menu text-small shadow">
