@@ -91,6 +91,8 @@ class Chatbot extends Component
 
     public function generateOpenAiResponse()
     {
+        dd('implement generateOpenAiResponse');
+        // TODO>> Implement the generateSystemPrompt method to generate a system prompt augmented with the context from the knowledge base
         $systemPrompt = $this->generateSystemPrompt();
 
         $stream = OpenAiService::createStreamedChat($systemPrompt, $this->userPrompt);
@@ -112,7 +114,8 @@ class Chatbot extends Component
         }
         
         $message = Message::create([
-            'content' => $this->openAiResponse,
+            // 'content' => $this->openAiResponse,
+            'content' => "Hei, dovresti implementare il metodo generateOpenAiResponse",
             'role' => 'assistant',
             'chat_id' => $this->chat_id
         ]);
@@ -122,6 +125,8 @@ class Chatbot extends Component
 
     public function generateSystemPrompt()
     {
+        dd('implement generateSystemPrompt');
+        // TODO>> Implement the getContextFromKnowledgeBase method to retrieve the context from the knowledge base
         $context = $this->getContextFromKnowledgeBase($this->userPrompt);
 
         $system_template = "
@@ -137,20 +142,17 @@ class Chatbot extends Component
 
     public function getContextFromKnowledgeBase($message)
     {
-        $vector = json_encode(OpenAiService::createEmbedding($message));
+        dd('implement getContextFromKnowledgeBase');
 
-        $result = DB::table('embeddings')
-                ->select("content")
-                ->selectSub("embedding <=> '{$vector}'::vector", "distance")
-                ->orderBy('distance', 'asc')
-                ->limit(3)
-                ->get();
+        // TODO>> Create a vector from the message
 
-        $context = collect($result)->map(function ($item) {
-            return $item->content;
-        })->implode("\n");
+        // TODO>> Retrieve the context from the knowledge base
 
-        return $context;
+        // TODO>> Create a unique string from the results
+
+        // TODO>> Return the context
+
+        return;
     }
 
     public function createChat()
