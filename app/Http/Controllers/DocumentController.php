@@ -19,14 +19,17 @@ class DocumentController extends Controller
 
     public function store(Request $request)
     {
+        // Validate the request
         $request->validate([
             'name' => 'required',
             'file' => 'required|file'
         ]);
         
+        // Store the file
         $file = $request->file('file');
         $path = $file->store('documents');
 
+        // Create the document
         $document = Document::create([
             'name' => $request->name,
             'path' => $path,
@@ -34,19 +37,24 @@ class DocumentController extends Controller
             'size' => $file->getSize()
         ]);
 
-        $content = $document->getContentFromFile();
-        $documentParts = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
+        // TODO>> 
+        // Get the content of the document 
+        // Split the document into parts and create embeddings
+        // $content = $document->getContentFromFile();
+        // $documentParts = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
 
-        foreach ($documentParts as $part) {
+        // TODO>>
+        // Create embeddings for each part of the document
+        // foreach ($documentParts as $part) {
             
-            $vector = OpenAiService::createEmbedding($part);
+        //     $vector = OpenAiService::createEmbedding($part);
             
-            $embedding = $document->embeddings()->create([
-                'content' => $part,
-                'embedding' => json_encode($vector)
-            ]);
+        //     $embedding = $document->embeddings()->create([
+        //         'content' => $part,
+        //         'embedding' => json_encode($vector)
+        //     ]);
 
-        }
+        // }
 
         return redirect()->route('documents.index');
     }

@@ -24,29 +24,23 @@ class Document extends Model
         return number_format(($this->size / pow(1024, $i)), 2) . ' ' . ['B', 'kB', 'MB', 'GB', 'TB'][$i] ;
     }
 
-    public function getContentFromFile(): string|false
-    {
-        if (strtolower(pathinfo($this->path, PATHINFO_EXTENSION)) === 'pdf') {
-            $parser = new Parser();
-            $pdf = $parser->parseFile(storage_path('app/' . $this->path));
+    // TODO>> Implement the getContentFromFile method
+    // public function getContentFromFile(): string|false
+    // {
+    //     if (strtolower(pathinfo($this->path, PATHINFO_EXTENSION)) === 'pdf') {
+    //         $parser = new Parser();
+    //         $pdf = $parser->parseFile(storage_path('app/' . $this->path));
 
-            return $pdf->getText();
-        }
+    //         return $pdf->getText();
+    //     }
 
-        // if (strtolower(pathinfo($this->path, PATHINFO_EXTENSION)) === 'docx') {
-        //     $phpWord = IOFactory::load($this->path);
-        //     $fullText = '';
-        //     foreach ($phpWord->getSections() as $section) {
-        //         $fullText .= $this->extractTextFromDocxNode($section);
-        //     }
+    //     // EXTRA>> We can add support for other file types here
 
-        //     return $fullText;
-        // }
+    //     return file_get_contents($this->path);
+    // }
 
-        return file_get_contents($this->path);
-    }
-
-    public function embeddings(){
-        return $this->hasMany(Embedding::class);
-    }
+    // TODO>> Define the relationship with the Embedding model
+    // public function embeddings(){
+    //     return $this->hasMany(Embedding::class);
+    // }
 }
