@@ -16,7 +16,5 @@ class Embedding extends Model
     ];
 
     // TODO>> Define the relationship with the Document model
-    public function document(){
-        return $this->belongsTo(Document::class);
-    }
+
 }

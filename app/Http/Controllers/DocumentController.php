@@ -40,21 +40,11 @@ class DocumentController extends Controller
         // TODO>> 
         // Get the content of the document 
         // Split the document into parts and create embeddings
-        // $content = $document->getContentFromFile();
-        // $documentParts = DocumentSplitterService::splitDocument($content, 500, ' ', 30);
+
 
         // TODO>>
         // Create embeddings for each part of the document
-        // foreach ($documentParts as $part) {
-            
-        //     $vector = OpenAiService::createEmbedding($part);
-            
-        //     $embedding = $document->embeddings()->create([
-        //         'content' => $part,
-        //         'embedding' => json_encode($vector)
-        //     ]);
 
-        // }
 
         return redirect()->route('documents.index');
     }
