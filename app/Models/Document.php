@@ -25,8 +25,4 @@ class Document extends Model
     }
 
     // TODO>> Implement the getContentFromFile method
-    
-
-    // TODO>> Define the relationship with the Embedding model
-
 }

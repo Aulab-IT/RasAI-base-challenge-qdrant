@@ -44,6 +44,7 @@ class DocumentController extends Controller
 
         // TODO>>
         // Create embeddings for each part of the document
+        // Save the embeddings to the vector database
 
 
         return redirect()->route('documents.index');

@@ -114,8 +114,7 @@ class Chatbot extends Component
         }
         
         $message = Message::create([
-            // 'content' => $this->openAiResponse,
-            'content' => "Hei, dovresti implementare il metodo generateOpenAiResponse",
+            'content' => $this->openAiResponse,
             'role' => 'assistant',
             'chat_id' => $this->chat_id
         ]);
@@ -127,7 +126,15 @@ class Chatbot extends Component
     {
         dd('implement generateSystemPrompt');
         // TODO>> Implement the getContextFromKnowledgeBase method to retrieve the context from the knowledge base
-        $context = $this->getContextFromKnowledgeBase($this->userPrompt);
+        
+        // TODO>> Create a vector from the message
+        
+        // TODO>> Retrieve the context from the knowledge base
+        
+        // TODO>> Create a unique string from the results
+        
+        // TODO>> Create the context
+        $context;
 
         $system_template = "
         Utilizza i seguenti elementi di contesto per rispondere alla domanda degli utenti. Se non conosci la risposta, rispondi semplicemente che non sai la risposta, non cercate di inventare una risposta.
@@ -144,13 +151,7 @@ class Chatbot extends Component
     {
         dd('implement getContextFromKnowledgeBase');
 
-        // TODO>> Create a vector from the message
 
-        // TODO>> Retrieve the context from the knowledge base
-
-        // TODO>> Create a unique string from the results
-
-        // TODO>> Return the context
 
         return;
     }
