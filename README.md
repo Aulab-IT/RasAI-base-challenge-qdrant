@@ -21,7 +21,6 @@
     - [ ] Return the context of the most similar embeddings
     - [ ] Return the system prompt with the context
 - [ ] Implement the generateOpenAiResponse method in ```Chatbot.php```
-- [ ] Save the message in the database
     
 ### EXTRA 
 - [ ] Implement createChatTitle in ```OpenAiService.php``` to create a title for the chat

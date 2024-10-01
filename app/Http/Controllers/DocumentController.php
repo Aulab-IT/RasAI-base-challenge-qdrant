@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use Illuminate\Http\Request;
-use App\Services\DocumentSplitterService;
 use App\Services\OpenAiService;
+use App\Services\QdrantService;
 use Illuminate\Support\Facades\Storage;
+use App\Services\DocumentSplitterService;
 
 class DocumentController extends Controller
 {
@@ -39,13 +40,20 @@ class DocumentController extends Controller
 
         // TODO>> 
         // Get the content of the document 
+        $content = $document->getContentFromFile();
         // Split the document into parts and create embeddings
-
+        $documentParts = DocumentSplitterService::splitDocument($content, 500, ' ', 20);
 
         // TODO>>
         // Create embeddings for each part of the document
-        // Save the embeddings to the vector database
+        $qdrant = new QdrantService();
 
+        foreach ($documentParts as $documentPart) {
+            $embedding = OpenAiService::createEmbedding($documentPart);
+            
+            // Save the embeddings to the vector database
+            $qdrant->insert($embedding, $documentPart);
+        }
 
         return redirect()->route('documents.index');
     }

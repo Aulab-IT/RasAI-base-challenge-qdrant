@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02b05064b1d5fd9d09c1fcd379ba28c2",
+    "content-hash": "b1244f9dab9e7d70c26ddd290ce472af",
     "packages": [
         {
             "name": "brick/math",
@@ -1049,6 +1049,62 @@
                 }
             ],
             "time": "2023-12-03T19:50:20+00:00"
+        },
+        {
+            "name": "hkulekci/qdrant",
+            "version": "v0.5.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hkulekci/qdrant-php.git",
+                "reference": "0a9219682b7ec485f4528a233f3e36a1cb60d2b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hkulekci/qdrant-php/zipball/0a9219682b7ec485f4528a233f3e36a1cb60d2b5",
+                "reference": "0a9219682b7ec485f4528a233f3e36a1cb60d2b5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "php-http/discovery": "^1.19",
+                "psr/http-client": "^1.0",
+                "psr/http-client-implementation": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-factory-implementation": "^1.0",
+                "psr/http-message": "^1.0|^2.0",
+                "psr/log": "^1.0|^2.0|^3.0",
+                "webmozart/assert": "^1.11"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "nyholm/psr7": "^1.8@dev",
+                "php-http/mock-client": "1.x-dev",
+                "phpunit/php-code-coverage": "^10.1@dev",
+                "phpunit/phpunit": "^10.0",
+                "symfony/http-client": "^6.4.3|^7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Qdrant\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Haydar Kulekci",
+                    "email": "haydarkulekci@gmail.com"
+                }
+            ],
+            "description": "PHP Client for Qdrant",
+            "support": {
+                "issues": "https://github.com/hkulekci/qdrant-php/issues",
+                "source": "https://github.com/hkulekci/qdrant-php/tree/v0.5.7"
+            },
+            "time": "2024-09-27T08:52:26+00:00"
         },
         {
             "name": "laravel/framework",

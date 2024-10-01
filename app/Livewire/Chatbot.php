@@ -9,6 +9,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\WithFileUploads;
 use App\Services\OpenAiService;
+use App\Services\QdrantService;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -16,9 +17,6 @@ use OpenAI\Laravel\Facades\OpenAI;
 class Chatbot extends Component
 {
     use WithFileUploads;
-
-    const ROLE_USER = 'user';
-    const ROLE_ASSISTANT = 'assistant';
     
     #[Url(as: 'c')] 
     public $chat_id = null;
@@ -80,7 +78,7 @@ class Chatbot extends Component
         $chat = Chat::find($this->chat_id);
         $chat->messages()->create([
             'content' =>  $this->currentMessage,
-            'role' => self::ROLE_USER
+            'role' => 'user'
         ]);
 
         $this->currentMessage = '';
@@ -91,7 +89,6 @@ class Chatbot extends Component
 
     public function generateOpenAiResponse()
     {
-        dd('implement generateOpenAiResponse');
         // TODO>> Implement the generateSystemPrompt method to generate a system prompt augmented with the context from the knowledge base
         $systemPrompt = $this->generateSystemPrompt();
 
@@ -124,19 +121,16 @@ class Chatbot extends Component
 
     public function generateSystemPrompt()
     {
-        dd('implement generateSystemPrompt');
         // TODO>> Retrieve the context from the knowledge base
-        
+        $vector = OpenAiService::createEmbedding($this->userPrompt);
         // TODO>> Create a vector from the message
-        
+        $qdrant = new QdrantService();
         // TODO>> Retrieve the context from the knowledge base
-        
+        $results = $qdrant->search($vector);
         // TODO>> Create a unique string from the results
-        
-        // TODO>> Create the context
-        $context;
+        $context = collect($results)->where('score', '>', 0.75)->pluck('payload.content')->implode("\n");
 
-        $system_template = "
+        $system_prompt = "
         Utilizza i seguenti elementi di contesto per rispondere alla domanda degli utenti. Se non conosci la risposta, rispondi semplicemente che non sai la risposta, non cercate di inventare una risposta.
         ----------------
         $context

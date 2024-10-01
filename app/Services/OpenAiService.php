@@ -17,9 +17,15 @@ class OpenAiService {
 
     public static function createChatTitle($content)
     {   
-        return "Hei, implementa il metodo createChat";
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                ['role' => 'system', 'content' => 'Crea il titolo per una chat di al massimo 5 parole in base al messaggio dell\'utente'],
+                ['role' => 'user', 'content' => $content],
+            ]
+            ]);
 
-        // TODO>> Implement the createChatTitle method ask to GPT to create a title for a chat with the given content
+        return $response->choices[0]->message->content;
     }
 
     public static function createStreamedChat($systemPrompt, $userPrompt)

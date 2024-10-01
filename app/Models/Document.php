@@ -25,4 +25,23 @@ class Document extends Model
     }
 
     // TODO>> Implement the getContentFromFile method
+    
+    public function getContentFromFile(): string
+    {
+        if($this->mime == 'application/pdf'){            
+            $parser = new Parser();
+            $pdf = $parser->parseFile(storage_path('app/' . $this->path));
+    
+            $text = $pdf->getText();
+
+            return $text;
+        }
+
+        if($this->mime == 'text/plain'){
+            return file_get_contents(storage_path('app/' . $this->path));
+        }
+
+        
+        return '';
+    }
 }
