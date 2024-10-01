@@ -16,12 +16,12 @@
 
 
 ### Implement the RAG
-- [ ] Implement the generateOpenAiResponse method in ```Chatbot.php```
 - [ ] Implement the generateSystemPrompt method in ```Chatbot.php```
     - [ ] Create a vector from the message send by the user
     - [ ] Retrive the most similar embeddings from the database
     - [ ] Return the context of the most similar embeddings
     - [ ] Return the system prompt with the context
+- [ ] Implement the generateOpenAiResponse method in ```Chatbot.php```
 - [ ] Save the message in the database
     
 ### EXTRA 

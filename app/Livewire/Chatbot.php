@@ -125,7 +125,7 @@ class Chatbot extends Component
     public function generateSystemPrompt()
     {
         dd('implement generateSystemPrompt');
-        // TODO>> Implement the getContextFromKnowledgeBase method to retrieve the context from the knowledge base
+        // TODO>> Retrieve the context from the knowledge base
         
         // TODO>> Create a vector from the message
         
@@ -139,21 +139,10 @@ class Chatbot extends Component
         $system_template = "
         Utilizza i seguenti elementi di contesto per rispondere alla domanda degli utenti. Se non conosci la risposta, rispondi semplicemente che non sai la risposta, non cercate di inventare una risposta.
         ----------------
-        {context}
+        $context
         ";
-        
-        $system_prompt = str_replace("{context}", $context, $system_template);
 
         return $system_prompt;
-    }
-
-    public function getContextFromKnowledgeBase($message)
-    {
-        dd('implement getContextFromKnowledgeBase');
-
-
-
-        return;
     }
 
     public function createChat()

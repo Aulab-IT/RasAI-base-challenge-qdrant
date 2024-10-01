@@ -48,7 +48,7 @@ class QdrantService
         $points = new PointsStruct();
         $points->addPoint(
             new PointStruct(
-                Str::uuid(), // (int) time(),
+                Str::uuid(),
                 new VectorStruct($vector, 'document'),
                 [
                     'content' => $content
