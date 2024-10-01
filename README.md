@@ -1,8 +1,7 @@
 ## TODO>>
 
 ### Implement the Vector Database and Embeddings
-- [ ] Create the embeddings when a document is created
-    - [ ] Add a library to read PDF files
+- [ ] Create the embeddings when a document is created in DocumentController@store function
     - [ ] Install "smalot/pdfparser" with `composer require smalot/pdfparser`
     - [ ] Create a function in Document Model to extract the text from a file
     - [ ] Create in DocumentSplitterService a static function to split the text into paragraphs
