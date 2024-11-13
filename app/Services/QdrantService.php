@@ -17,11 +17,11 @@ class QdrantService
 
     public function __construct()
     {
-        $config = new \Qdrant\Config(env("QDRANT_HOST"));
-        $config->setApiKey(env("QDRANT_API_KEY"));
-        $client = new \GuzzleHttp\Client();
+        $config = new Config(env('QDRANT_HOST'));
+        $config->setApiKey(env('QDRANT_API_KEY'));
 
-        $this->client = new Qdrant(new Transport($client, $config));
+        $transport = (new Builder())->build($config);
+        $this->client = new Qdrant($transport);
     }
 
     public function search($vector)

@@ -16,9 +16,6 @@ use OpenAI\Laravel\Facades\OpenAI;
 class Chatbot extends Component
 {
     use WithFileUploads;
-
-    const ROLE_USER = 'user';
-    const ROLE_ASSISTANT = 'assistant';
     
     #[Url(as: 'c')] 
     public $chat_id = null;
@@ -55,16 +52,11 @@ class Chatbot extends Component
     private function loadChat($chat_id)
     {
         if(!$chat_id){
-            $this->resetChat();
+            $this->chat_id = null;
             return;
         }
         
         $this->chat_id = $chat_id;
-    }
-
-    private function resetChat()
-    {
-        $this->chat_id = null;
     }
 
     public function ask()
@@ -80,7 +72,7 @@ class Chatbot extends Component
         $chat = Chat::find($this->chat_id);
         $chat->messages()->create([
             'content' =>  $this->currentMessage,
-            'role' => self::ROLE_USER
+            'role' => 'user'
         ]);
 
         $this->currentMessage = '';
@@ -91,7 +83,6 @@ class Chatbot extends Component
 
     public function generateOpenAiResponse()
     {
-        dd('implement generateOpenAiResponse');
         // TODO>> Implement the generateSystemPrompt method to generate a system prompt augmented with the context from the knowledge base
         $systemPrompt = $this->generateSystemPrompt();
 

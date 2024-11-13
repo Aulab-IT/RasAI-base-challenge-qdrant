@@ -22,6 +22,21 @@
     - [ ] Return the system prompt with the context
 - [ ] Implement the generateOpenAiResponse method in ```Chatbot.php```
 - [ ] Save the message in the database
-    
-### EXTRA 
+
+### Implement Image Generation
+- [ ] Create migration and add `is_image` to the messages table
+- [ ] Check if user is ask for an image or a text
+- [ ] If the user is asking for an image, generate an image with the text
+- [ ] Save the image in the database
+
+### Implement Audio Generation
+- [ ] Create a migration to add `audio_path` to the messages table
+- [ ] Create a function to record the user's voice (https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder)
+- [ ] Save the audio in the database as Message
+- [ ] Create a function to convert the audio to text
+- [ ] Save the text in the database as Message
+
+### EXTRA
+- [ ] Show loader when the user is waiting for the generated image
+- [ ] Create a function to delete the audio recorded by the user
 - [ ] Implement createChatTitle in ```OpenAiService.php``` to create a title for the chat
